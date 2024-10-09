@@ -1,0 +1,15 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.stswp
+.do.stswp
+
+# exclude temporary files
+/tmp/
+
+# exclude the entire data folder from github, will be hosted externally
+/data/
+
+# exclude output as well (only temporarily)
+/output/
