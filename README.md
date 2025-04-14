@@ -25,3 +25,4 @@ This diagram shows the full directory structure after calling setup.sh on Linux 
     13 directories, 4 files
 
 
+All the input data should be in the Dropbox or shared folder under `/../data/input` and should be separated by  `/../data/input/restricted` and `/../data/input/public`.
