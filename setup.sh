@@ -17,3 +17,6 @@ mkdir output/tables/appendix
 mkdir tmp
 mkdir tmp/restricted
 mkdir sandbox      # git-ignored agent scratch space
+
+# Make sure CLAUDE.md points at AGENTS.md (single source of agent rules)
+ln -sf AGENTS.md CLAUDE.md
