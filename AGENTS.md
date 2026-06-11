@@ -8,7 +8,7 @@ Short version. Full detail in [README.md](README.md).
   `code/{build,process,analyze}/` or `notes/`.
 - Summarize finished work as a note in `notes/`, and update `notes/STATUS_OVERVIEW.md`
   (link it under Open or Resolved).
-- Read papers from `literature/fulltext/`; don't guess from titles.
+- Read papers from `literature/fulltexts/`; don't guess from titles.
 
 ## Data
 - `data/input` = raw, read-only, lives outside the repo. `data/intermediate` =

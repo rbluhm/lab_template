@@ -16,8 +16,9 @@ This diagram shows the full directory structure after calling setup.sh on Linux 
     │   └── intermediate
     │       └── restricted
     ├── literature
-    │   ├── fulltext
-    │   └── notes
+    │   ├── fulltexts
+    │   ├── notes
+    │   └── templates
     ├── notes
     │   └── STATUS_OVERVIEW.md
     ├── output
@@ -103,16 +104,11 @@ and **Resolved**. Agents update the overview every session.
 
 ### `literature/` — the reading layer (tracked)
 
-The Zotero / Obsidian / `markersync` pipeline that gives agents the actual text
-of the papers:
+The Zotero → Obsidian → Marker pipeline that gives agents the actual text of the
+papers. The project repo doubles as an Obsidian vault: each paper produces a
+structured note in `literature/notes/` (from Zotero highlights) and a full-text
+markdown rendering in `literature/fulltexts/` (from the Marker API). Templates
+live in `literature/templates/`. PDFs live outside the repo.
 
-- `literature/notes/` — one note per paper, generated automatically by the
-  **Obsidian + Zotero** integration when a paper is pulled into the library
-  (metadata + a Zotero link to the PDF).
-- `literature/fulltext/` — Markdown full text + extracted images of each paper.
-  The R package [`markersync`](https://github.com/rbluhm/markersync) syncs
-  Zotero-managed PDFs to Markdown via a self-hosted Marker server: running
-  `sync_fulltext()` finds notes lacking full text, grabs the PDF from Zotero
-  storage, and writes the converted Markdown here.
-
-See [`literature/README.md`](literature/README.md) for the full loop.
+See **[literature/README.md](literature/README.md)** for the full spec — required
+tools, one-time setup, the per-paper workflow, and what's tracked vs. ignored.
