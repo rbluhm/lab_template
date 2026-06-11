@@ -13,15 +13,25 @@
 # All of obsidian for now
 .obsidian/
 
+# Keep the folder skeleton tracked (.gitkeep) but ignore the actual contents.
+# The pattern: ignore everything under the folder, but re-include subdirectories
+# so git can descend, and re-include the .gitkeep markers themselves.
+
 # exclude temporary files
-/tmp/
+/tmp/**
+!/tmp/**/
+!/tmp/**/.gitkeep
 /logs/
 
 # exclude the entire data folder from github, will be hosted externally
-/data/
+/data/**
+!/data/**/
+!/data/**/.gitkeep
 
 # exclude output as well (only temporarily)
-/output/
+/output/**
+!/output/**/
+!/output/**/.gitkeep
 
 # agent scratch space: everything in sandbox is ignored except the keep file.
 # Work only enters version control once a human promotes it into code/, notes/, etc.
