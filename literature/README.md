@@ -47,7 +47,7 @@ The project repository *is* the Obsidian vault. Each project has its own vault w
    - Template File Path: `literature/templates/paper_note.md`
    - Output Path: `literature/notes`
    - Output File Name: `{{citekey}}`
-   - Image Output Path: `literature/notes/assets`
+   - Image Output Path: leave **empty** (do not extract annotation images)
 
    Obsidian config (`.obsidian/`) is **not** tracked, so each collaborator sets this up once per clone.
 
