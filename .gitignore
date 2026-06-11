@@ -4,12 +4,27 @@
 .Ruserdata
 .stswp
 .do.stswp
+.DS_Store
+.Rplots.pdf
+
+.vscode/
+.claude/
+
+# All of obsidian for now
+.obsidian/
 
 # exclude temporary files
 /tmp/
+/logs/
 
 # exclude the entire data folder from github, will be hosted externally
 /data/
 
 # exclude output as well (only temporarily)
 /output/
+
+# agent scratch space: everything in sandbox is ignored except the keep file.
+# Work only enters version control once a human promotes it into code/, notes/, etc.
+/sandbox/*
+!/sandbox/.gitkeep
+!/sandbox/README.md
