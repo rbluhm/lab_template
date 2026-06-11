@@ -107,8 +107,10 @@ and **Resolved**. Agents update the overview every session.
 The Zotero → Obsidian → Marker pipeline that gives agents the actual text of the
 papers. The project repo doubles as an Obsidian vault: each paper produces a
 structured note in `literature/notes/` (from Zotero highlights) and a full-text
-markdown rendering in `literature/fulltexts/` (from the Marker API). Templates
-live in `literature/templates/`. PDFs live outside the repo.
+markdown rendering in `literature/fulltexts/` (via the
+[`markersync`](https://github.com/rbluhm/markersync) R package, which sends the
+PDF to a Marker server). Templates live in `literature/templates/`. Obsidian
+config and PDFs live outside git.
 
 See **[literature/README.md](literature/README.md)** for the full spec — required
 tools, one-time setup, the per-paper workflow, and what's tracked vs. ignored.

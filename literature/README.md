@@ -17,18 +17,11 @@ The project repository *is* the Obsidian vault. Each project has its own vault w
     <citekey>.pdf                          # Renamed by Better BibTeX
 
 <repo-root>/                               # Project repo = Obsidian vault
-├── .obsidian/
-│   ├── app.json                           # tracked
-│   ├── community-plugins.json             # tracked
-│   └── plugins/
-│       └── obsidian-zotero-desktop-connector/
-│           └── data.json                  # tracked (no secrets)
+├── .obsidian/                             # NOT tracked — fully git-ignored
 ├── literature/
 │   ├── notes/<citekey>.md                 # Zotero Integration output
-│   ├── fulltexts/<citekey>.md             # Marker output
-│   └── templates/lit-note.md              # Nunjucks template
-├── scripts/
-│   └── marker-convert.sh                  # Marker API client
+│   ├── fulltexts/<citekey>.md             # markersync output
+│   └── templates/paper_note.md            # Nunjucks template
 └── .gitignore
 ```
 
@@ -36,7 +29,8 @@ The project repository *is* the Obsidian vault. Each project has its own vault w
 
 - **Zotero 7** with **Better BibTeX** (citekey format: `[auth:lower][year]`, e.g. `acemoglu2001`)
 - **Obsidian** with the **Zotero Integration** plugin (mgmeyers)
-- Access to the **Marker API** at `https://server.ivr.uni-stuttgart.de/marker/upload` (campus network or VPN; running `marker-pdf[api]`)
+- **R** with the [**markersync**](https://github.com/rbluhm/markersync) package — syncs Zotero-managed PDFs to markdown via a self-hosted Marker server
+- Access to the **Marker server** at `https://server.ivr.uni-stuttgart.de/marker/upload` (campus network or VPN; running `marker-pdf[api]`)
 
 ## One-time setup
 
@@ -49,22 +43,26 @@ The project repository *is* the Obsidian vault. Each project has its own vault w
 ### Obsidian
 
 1. Open the project repo root as an Obsidian vault.
-2. Install Zotero Integration plugin; the import format and template path are already configured in the tracked `data.json`.
-3. Verify Import Format settings:
-   - Template File Path: `literature/templates/lit-note.md`
+2. Install Zotero Integration plugin and configure Import Format settings:
+   - Template File Path: `literature/templates/paper_note.md`
    - Output Path: `literature/notes`
    - Output File Name: `{{citekey}}`
    - Image Output Path: `literature/notes/assets`
 
-### Marker script
+   Obsidian config (`.obsidian/`) is **not** tracked, so each collaborator sets this up once per clone.
 
-`scripts/marker-convert.sh` is checked in. Make it executable on first checkout:
+### markersync
 
-```bash
-chmod +x scripts/marker-convert.sh
+Install the package and point it at this project:
+
+```r
+# install once
+remotes::install_github("rbluhm/markersync")
 ```
 
-The script reads PDFs from `~/research/_pdfs/<citekey>.pdf` and writes markdown to `literature/fulltexts/<citekey>.md`. Configure the global PDF directory at the top of the script if your local path differs.
+Configure the Marker server URL and the global PDF directory (`~/research/_pdfs/`)
+as described in the package README. `markersync` reads PDFs from Zotero storage
+and writes markdown to `literature/fulltexts/<citekey>.md`.
 
 ## Per-paper workflow
 
@@ -79,29 +77,31 @@ The script reads PDFs from `~/research/_pdfs/<citekey>.pdf` and writes markdown 
 
 2. **Generate the structured note**: Obsidian → Command Palette → *Zotero Integration: Import* → select paper. Output appears at `literature/notes/<citekey>.md`. Re-running the import on the same paper refreshes highlights while preserving `{% persist %}` blocks (your own thoughts).
 
-3. **Generate the full-text rendering** (only for papers you'll engage with deeply):
-   ```bash
-   ./scripts/marker-convert.sh <citekey>
+3. **Generate the full-text rendering** (only for papers you'll engage with deeply). In R:
+   ```r
+   markersync::sync_fulltext()
    ```
-   Output at `literature/fulltexts/<citekey>.md`. The structured note's `[[<citekey>]]` link resolves to this file.
+   This finds notes that lack a full-text version, locates each PDF in Zotero
+   storage, sends it to the Marker server, and writes the converted markdown (plus
+   extracted images) to `literature/fulltexts/<citekey>.md`. Use `force_ocr = TRUE`
+   for scanned documents and the page-range options for long papers. The structured
+   note's `[[<citekey>]]` link resolves to this file.
 
 4. **Write your thoughts** in the `## Persistent notes` section of the structured note. These survive re-imports.
 
 ## What's in git
 
 **Tracked:**
-- `.obsidian/` (excluding workspace state)
 - `literature/notes/`, `literature/fulltexts/`, `literature/templates/`
-- `scripts/`
 
 **Ignored:**
-- `.obsidian/workspace.json`, `workspace-mobile.json`, `cache/`
+- `.obsidian/` — all Obsidian config and workspace state
 - PDFs (they live outside the repo in `~/research/_pdfs/`)
 - `.env`
 
 ## Notes for collaborators
 
-- The Marker API is restricted to campus IPs / VPN. If `scripts/marker-convert.sh` times out, check VPN connection.
+- The Marker server is restricted to campus IPs / VPN. If `markersync::sync_fulltext()` times out, check your VPN connection.
 - Citekeys must be consistent across collaborators. Everyone uses Better BibTeX with the same citekey format, so the same paper resolves to the same filename in every clone.
-- The pipeline does not require the Obsidian Marker plugin. The shell script is the supported path because it has no plugin-version dependencies and works identically on every machine.
+- `markersync` is the supported path for full-text rendering: it has no Obsidian-plugin-version dependencies and works identically on every machine.
 - PDFs are not in the repo by design. Each collaborator maintains their own Zotero library and PDF store; the repo contains only the *artifacts about* papers (notes, full-text renderings, templates).
